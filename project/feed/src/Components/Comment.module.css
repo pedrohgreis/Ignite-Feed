@@ -4,11 +4,11 @@
     gap: 1rem;
 }
 
-.comment > img {
+/* .comment > img {
     width: 3rem;
     height: 3rem;
     border-radius: 8px;
-}
+} */
 
 .commentBox {
     flex: 1; /* Faz com que o .commentBox ocupe todo o espaço restante disponível no contêiner flexível */
