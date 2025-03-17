@@ -1,4 +1,5 @@
 import styles from './Post.module.css';
+import {useState} from 'react';
 
 // Components
 import Comment from './Comment';
@@ -9,6 +10,7 @@ import {format, formatDistanceToNow} from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 
 
+
 // Para não utilizar o props.author.avatar_url, props.author.name, props.author.role, podemos utilizar o destructuring
 
 const Post = ({author, publishedAt, content}) => {
@@ -16,6 +18,44 @@ const Post = ({author, publishedAt, content}) => {
   const date = format(publishedAt, "dd 'de' LLLL 'às' HH:mm'h'", {locale: ptBR});
 
   const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {locale: ptBR, addSuffix: true});
+
+
+  // Utilizando o useState para criar um novo comentário
+  const [comments, setComments] = useState([
+    'Post muito bacana!',
+  ]); 
+
+  // * Aplicando programação declarativa, ou seja, criando uma função para criar um novo comentário
+  const [newCommentText, setNewCommentText] = useState('');
+  
+
+  const handleCreateNewComment = (event) => {
+    event.preventDefault();
+
+
+
+    // * event.target[0].value é o valor do campo de texto, ele pega o valor do campo de texto e armazena em uma variável
+    // const newCommentText = event.target.comment.value;
+    // event.target.comment.value = ''; // Limpa o campo de texto
+
+    /* 
+      ! o comments.length + 1 é para criar um novo comentário com um id diferente, ou seja, ele pega a posição do último comentário
+      ! e adiciona mais um, para que o comentário seja único e não tenha o mesmo id
+
+      * o setComments é para atualizar o estado do comentário, ou seja, adicionar um novo comentário
+    */
+    setComments([...comments, newCommentText]);
+    
+    // * volta para o valor original
+    setNewCommentText('');
+  }
+
+  const handleNewCommentChange = (event) => {
+    
+    // * salvando o valor do campo de texto em uma variável, ou seja, no newCommentText
+    setNewCommentText(event.target.value);
+
+  }
 
   return (
     
@@ -43,10 +83,17 @@ const Post = ({author, publishedAt, content}) => {
           })}
         </div>
 
-        <form className={styles.commentForm}>
+        <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
           <strong>Deixe seu feedback</strong>
 
-          <textarea placeholder="Escreva seu comentário"></textarea>
+          <textarea
+            name='comment' 
+            placeholder="Escreva seu comentário" 
+            value={newCommentText} // * limpa o textarea
+            onChange={handleNewCommentChange} 
+           />
+
+           
 
           <footer>
             <button type="submit">Publicar</button>
@@ -54,9 +101,9 @@ const Post = ({author, publishedAt, content}) => {
         </form>
 
         <div className={styles.commentList}>
-          <Comment />
-          <Comment />
-          <Comment />
+          {comments.map(comment => (
+            <Comment key={comment} content={comment} />
+          ))}
         </div>
       </article>
     
