@@ -4,7 +4,13 @@ import { ThumbsUp, Trash } from 'phosphor-react';
 // Components
 import Avatar from './Avatar';
 
-const Comment = ({content}) => {
+const Comment = ({content, onDeleteComment}) => {
+
+    const handleDeleteComment = () => {
+        // * Tem que deletar do estado de comments que está no Post
+        
+        onDeleteComment(content);
+    }
   return (
     
         <div className={styles.comment}> 
@@ -18,7 +24,7 @@ const Comment = ({content}) => {
                             <time title='13 de Março às 21:32h' dateTime="2025-03-13 21:32:40">Cerca de 1h atrás</time>
                         </div>
 
-                        <button title='Deletar comentário'>
+                        <button onClick={handleDeleteComment} title='Deletar comentário'>
                             <Trash size={24} weight="bold" />
                         </button>
                     </header>

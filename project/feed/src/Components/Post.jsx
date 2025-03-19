@@ -51,11 +51,43 @@ const Post = ({author, publishedAt, content}) => {
   }
 
   const handleNewCommentChange = (event) => {
-    
+    // Remove qualquer mensagem de erro personalizada que possa ter sido definida anteriormente.
+   // Isso garante que, se o usuário corrigir o erro (por exemplo, digitando algo no campo),
+   // a mensagem de erro desapareça.
+    event.target.setCustomValidity('');
+
     // * salvando o valor do campo de texto em uma variável, ou seja, no newCommentText
     setNewCommentText(event.target.value);
 
   }
+
+
+  //* é chamada quando o campo de texto é considerado inválido (por exemplo, se estiver vazio e o campo for obrigatório). 
+  const handleNewCommentInvalid = (event) => {
+    event.target.setCustomValidity("Esse campo é obrigatório");
+  }
+
+
+  const deleteComment = (commenToDeletet) => {
+    // * Para remover o comentário utilizo o setComments (pois ele que atualia)
+    /*
+      Imutabilidade -> as variáveis não sofrem mutações (não se altera uma variável na memória),
+      porém criamos um novo valor na memória
+
+    */
+
+    // Pra remover os comentários, eu crio uma nova lista de comentários
+    //* O filter vai percorrer cada comentário e se o comentário não for igual ao comentário que queremos deletar,
+    //* ele será mantido na nova lista de comentários
+    const commentWithoutDeleteOne = comments.filter(comment => {
+        return comment !== commenToDeletet;
+    });
+
+    setComments(commentWithoutDeleteOne); 
+    
+  }
+
+  const isNewCommentEmpty = newCommentText.length === 0;
 
   return (
     
@@ -91,18 +123,27 @@ const Post = ({author, publishedAt, content}) => {
             placeholder="Escreva seu comentário" 
             value={newCommentText} // * limpa o textarea
             onChange={handleNewCommentChange} 
+            onInvalid={handleNewCommentInvalid} //* onInvalid é chamada qnd o html identificar que houve tentativa de submit porém o texto do campo é inválido
+            required
            />
 
            
 
           <footer>
-            <button type="submit">Publicar</button>
+            <button type="submit" disabled={isNewCommentEmpty}>Publicar</button>
           </footer>
         </form>
 
         <div className={styles.commentList}>
           {comments.map(comment => (
-            <Comment key={comment} content={comment} />
+            <Comment 
+              key={comment} 
+              content={comment}
+              onDeleteComment={deleteComment} //* A função deleteComment é passada como parâmetro para o
+              // * componente Comment para que o componente Comment possa chamar essa função quando o 
+              // *usuário clicar no botão de deletar. Isso permite a comunicação entre os componentes 
+              // *Post e Comment.
+            />
           ))}
         </div>
       </article>
