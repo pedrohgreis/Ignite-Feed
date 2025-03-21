@@ -1,0 +1,9 @@
+header {
+    background-color: var(--gray-800);
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centraliza o texto verticalmente */
+    padding: 1.28rem 0;
+    width: 100%; /* Ocupa toda a largura */
+    position: relative; /* Mantém o fluxo normal da página */
+}
